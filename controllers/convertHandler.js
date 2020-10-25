@@ -7,46 +7,126 @@
 */
 
 function ConvertHandler() {
-  
-  this.getNum = function(input) {
-    var result;
-    
-    return result;
-  };
-  
-  this.getUnit = function(input) {
-    var result;
-    
-    return result;
-  };
-  
-  this.getReturnUnit = function(initUnit) {
-    var result;
-    
+
+  this.getNum = function (input) {
+    if (input.split('').filter(char => char === '/').length > 1) {
+      return '';
+    }
+
+    var noNumber = input.match(/\d{1,}/) === null;
+    if (noNumber) {
+      return 1;
+    }
+
+    var result = input.match(/(\d{1,}\.\d{1,}\/\d{1,})|(\d{1,}(\.|\/)?(\d{1,})?)/);
+
+    if (result === null) {
+      return '';
+    }
+
+    result = result[0];
+
+    if (result.indexOf('/') > -1) {
+      result = Number(result.split('/')[0]) / Number(result.split('/')[1]);
+    }
+
     return result;
   };
 
-  this.spellOutUnit = function(unit) {
-    var result;
-    
+  this.getUnit = function (input) {
+    var match = input.match(/[a-zA-Z]{1,}/);
+
+    if (match === null) {
+      return '';
+    }
+
+    var result = match[0];
+
+    var unitsAvailable = ['gal', 'l', 'mi', 'km', 'lbs', 'kg', 'GAL', 'L', 'MI', 'KM', 'LBS', 'KG'];
+
+    if (!unitsAvailable.includes(result)) {
+      return '';
+    }
+
     return result;
   };
-  
-  this.convert = function(initNum, initUnit) {
-    const galToL = 3.78541;
-    const lbsToKg = 0.453592;
-    const miToKm = 1.60934;
-    var result;
-    
+
+  this.getReturnUnit = function (initUnit) {
+    initUnit = initUnit.toLowerCase();
+
+    var convertImp = {
+      'gal': 'l',
+      'lbs': 'kg',
+      'mi': 'km'
+    };
+
+    var convertMet = {
+      'l': 'gal',
+      'kg': 'lbs',
+      'km': 'mi'
+    };
+
+    if (convertImp[initUnit]) {
+      return convertImp[initUnit];
+    }
+    else if (convertMet[initUnit]) {
+      return convertMet[initUnit];
+    }
+
+    return '';
+  };
+
+  this.spellOutUnit = function (unit) {
+    unit = unit.toLowerCase();
+
+    var convert = {
+      'gal': 'gallon',
+      'lbs': 'pound',
+      'mi': 'mile',
+      'l': 'liter',
+      'kg': 'kilogram',
+      'km': 'kilometre'
+    };
+
+    var result = convert[unit];
+
     return result;
   };
-  
-  this.getString = function(initNum, initUnit, returnNum, returnUnit) {
-    var result;
-    
+
+  this.convert = function (initNum, initUnit) {
+    initUnit = initUnit.toLowerCase();
+
+    var galToL = 3.78541;
+    var lbsToKg = 0.453592;
+    var miToKm = 1.60934;
+
+    var imp = ['gal', 'lbs', 'mi'];
+
+    var diffUnit = {
+      'gal': galToL,
+      'l': galToL,
+      'lbs': lbsToKg,
+      'kg': lbsToKg,
+      'mi': miToKm,
+      'km': miToKm
+    };
+
+    if (!Object.keys(diffUnit).includes(initUnit)) {
+      return 0;
+    }
+
+    var result = imp.includes(initUnit)
+      ? initNum * diffUnit[initUnit]
+      : initNum / diffUnit[initUnit];
+
     return result;
   };
-  
+
+  this.getString = function (initNum, initUnit, returnNum, returnUnit) {
+    var result = `${initNum} ${initUnit} converts to ${returnNum} ${returnUnit}`;
+
+    return result;
+  };
 }
 
 module.exports = ConvertHandler;
