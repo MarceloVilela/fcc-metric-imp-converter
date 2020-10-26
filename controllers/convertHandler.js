@@ -30,7 +30,7 @@ function ConvertHandler() {
       result = Number(result.split('/')[0]) / Number(result.split('/')[1]);
     }
 
-    return result;
+    return Number(result);
   };
 
   this.getUnit = function (input) {
@@ -48,7 +48,7 @@ function ConvertHandler() {
       return '';
     }
 
-    return result;
+    return result.toLowerCase();
   };
 
   this.getReturnUnit = function (initUnit) {
@@ -85,7 +85,7 @@ function ConvertHandler() {
       'mi': 'mile',
       'l': 'liter',
       'kg': 'kilogram',
-      'km': 'kilometre'
+      'km': 'kilometer'
     };
 
     var result = convert[unit];
@@ -119,11 +119,13 @@ function ConvertHandler() {
       ? initNum * diffUnit[initUnit]
       : initNum / diffUnit[initUnit];
 
-    return result;
+    var resultFormatted = Number(Number(result).toFixed(5));
+
+    return resultFormatted;
   };
 
   this.getString = function (initNum, initUnit, returnNum, returnUnit) {
-    var result = `${initNum} ${initUnit} converts to ${returnNum} ${returnUnit}`;
+    var result = `${initNum} ${this.spellOutUnit(initUnit)}s converts to ${returnNum} ${this.spellOutUnit(returnUnit)}s`;
 
     return result;
   };

@@ -60,7 +60,7 @@ suite('Unit Tests', function () {
       var input = ['gal', 'l', 'mi', 'km', 'lbs', 'kg', 'GAL', 'L', 'MI', 'KM', 'LBS', 'KG'];
       input.forEach(function (ele) {
         var input = `3.2${ele}`;
-        assert.equal(convertHandler.getUnit(input), ele);
+        assert.equal(convertHandler.getUnit(input), ele.toLowerCase());
       });
       done();
     });
@@ -90,7 +90,7 @@ suite('Unit Tests', function () {
 
     test('For Each Valid Unit Inputs', function (done) {
       var input = ['gal', 'l', 'mi', 'km', 'lbs', 'kg'];
-      var expect = ['gallon', 'liter', 'mile', 'kilometre', 'pound', 'kilogram'];
+      var expect = ['gallon', 'liter', 'mile', 'kilometer', 'pound', 'kilogram'];
       input.forEach(function (ele, i) {
         assert.equal(convertHandler.spellOutUnit(ele), expect[i]);
       });
